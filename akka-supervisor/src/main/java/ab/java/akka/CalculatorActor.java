@@ -3,10 +3,13 @@ package ab.java.akka;
 import java.math.BigInteger;
 
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import scala.Option;
 
 public class CalculatorActor extends UntypedActor {
 
+	private LoggingAdapter logger = Logging.getLogger(this);
 	
 	
 	@Override
@@ -14,9 +17,9 @@ public class CalculatorActor extends UntypedActor {
 		if (msg instanceof Integer) {
 			int number = (Integer) msg;
 			BigInteger result = factorial(new BigInteger(msg.toString()));
-			System.out.println(this.getSelf().path().name() + " - factorial " + number + " is " + result);
+			logger.debug("{} - factorial {} is {}", this.getSelf().path().name(), number, result);
 		} else {
-			System.out.println(this.getSelf().path().name() + " - unknown message: " + msg);
+			logger.warning("{} - unknown message: {}", this.getSelf().path().name(), msg);
 		}
 		
 	}

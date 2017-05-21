@@ -4,10 +4,14 @@ import java.util.stream.IntStream;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import scala.Option;
 
 
 public class MainActor extends UntypedActor {
+	
+	private LoggingAdapter logger = Logging.getLogger(this);
 	
 	private static final int CALCULATORS_COUNT = 10;
 	
@@ -19,12 +23,12 @@ public class MainActor extends UntypedActor {
 		if (msg instanceof Integer) {
 
 				 ActorRef calc = this.context().children().toList().apply(next);
-				 calc.tell((Integer)msg, ActorRef.noSender());
+				 calc.tell((Integer)msg, this.getSelf());
 				 
 				 next = (next+1) % CALCULATORS_COUNT;
 				 
 		} else {
-			System.out.println(this.getSelf().path().name() + " - unknown message: " + msg);
+			logger.warning("{} - unknown message: {}", this.getSelf().path().name(), msg);
 		}
 	}
 
