@@ -19,7 +19,6 @@ public class CalculatorActor extends UntypedActor {
 		} else {
 			logger.warning("{} - unknown message: {}", this.getSelf().path().name(), msg);
 		}
-		
 	}
 	
 	private BigInteger factorial(BigInteger number) {
