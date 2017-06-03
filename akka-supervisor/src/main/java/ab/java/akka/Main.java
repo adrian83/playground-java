@@ -8,22 +8,18 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		
-		ActorSystem actorSystem = ActorSystem.create("my-actor-system");
+		ActorSystem actorSystem = ActorSystem.create("supervisor-test-system");
 		
 		Props mainActorProps = Props.create(MainActor.class);
 		ActorRef mainActorRef = actorSystem.actorOf(mainActorProps);
 		
-		
-		for(int i=1; i< 1000; i++){
+		for(int i=1; i< 100; i++){
 			mainActorRef.tell(i, ActorRef.noSender());
 		}
 		
-		Thread.sleep(40000);
-		
+		Thread.sleep(10000);
 		
 		actorSystem.terminate();
-		
 	}
 
 }

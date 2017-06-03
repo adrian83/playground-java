@@ -1,12 +1,16 @@
 package ab.java.akka;
 
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import akka.actor.ActorRef;
+import akka.actor.OneForOneStrategy;
 import akka.actor.Props;
+import akka.actor.SupervisorStrategy;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import scala.Option;
+import akka.japi.pf.DeciderBuilder;
+import scala.concurrent.duration.Duration;
 
 
 public class MainActor extends UntypedActor {
@@ -16,6 +20,16 @@ public class MainActor extends UntypedActor {
 	private static final int CALCULATORS_COUNT = 10;
 	
 	private int next = 0;
+	
+	private static final SupervisorStrategy strategy =
+			  new OneForOneStrategy(100, Duration.apply(2, TimeUnit.SECONDS), DeciderBuilder.
+			    match(CalculationException.class, e -> SupervisorStrategy.restart()).
+			    matchAny(o -> SupervisorStrategy.escalate()).build());
+
+			@Override
+			public SupervisorStrategy supervisorStrategy() {
+			  return strategy;
+			}
 	
 	@Override
 	public void onReceive(Object msg) throws Throwable {
@@ -35,29 +49,8 @@ public class MainActor extends UntypedActor {
 	@Override
 	public void preStart() throws Exception {
 		super.preStart();
-		//System.out.println("PRE START: actor " + this.getSelf().path().name());
-		
-		IntStream.range(0, CALCULATORS_COUNT).forEach(i -> this.context().actorOf(Props.create(CalculatorActor.class)));
+		IntStream.range(0, CALCULATORS_COUNT-1).forEach(i -> this.context().actorOf(Props.create(CalculatorActor.class)));
+		this.context().actorOf(Props.create(FaultyActor.class));
 	}
-	
-	@Override
-	public void postStop() throws Exception {
-		super.postStop();
-		//System.out.println("POST STOP: actor " + this.getSelf().path().name());
-	}
-	
-	@Override
-	public void preRestart(Throwable reason, Option<Object> msg) throws Exception {
-		super.preRestart(reason, msg);
-		//System.out.println("PRE RESTART: actor " + this.getSelf().path().name() 
-		//		+ ", reason: " + reason + ", msg: " + msg);
-	}
-	
-	@Override
-	public void postRestart(Throwable reason) throws Exception {
-		super.postRestart(reason);
-		//System.out.println("POST RESTART: actor " + this.getSelf().path().name() 
-		//		+ ", reason: " + reason);
-	}
-	
+
 }
