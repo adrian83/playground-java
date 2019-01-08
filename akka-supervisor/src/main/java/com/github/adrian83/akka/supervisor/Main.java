@@ -1,4 +1,4 @@
-package ab.java.akka;
+package com.github.adrian83.akka.supervisor;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -17,7 +17,7 @@ public class Main {
 			mainActorRef.tell(i, ActorRef.noSender());
 		}
 		
-		Thread.sleep(10000);
+		Thread.sleep(50000);
 		
 		actorSystem.terminate();
 	}

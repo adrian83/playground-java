@@ -1,4 +1,4 @@
-package ab.java.akka;
+package com.github.adrian83.akka.supervisor;
 
 public class CalculationException extends RuntimeException {
 
