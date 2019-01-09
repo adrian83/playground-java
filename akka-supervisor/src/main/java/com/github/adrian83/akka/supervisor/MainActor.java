@@ -19,7 +19,7 @@ public class MainActor extends AbstractActor {
 
 	private LoggingAdapter logger = Logging.getLogger(this);
 
-	private static final int CALCULATORS_COUNT = 10;
+	protected static final int CALCULATORS_COUNT = 10;
 
 	private int next = 0;
 
@@ -37,19 +37,23 @@ public class MainActor extends AbstractActor {
 		logger.info("Starting MainActor");
 		super.preStart();
 
-		range(0, CALCULATORS_COUNT).forEach(i -> this.context().actorOf(create(actor(i))));
-	}
-
-	Class<? extends AbstractActor> actor(Integer i) {
-		return i % 8 == 0 ? FaultyActor.class : CalculatorActor.class;
+		range(0, CALCULATORS_COUNT).forEach(i -> this.context().actorOf(create(actor(i + 1))));
 	}
 
 	@Override
 	public Receive createReceive() {
-		return receiveBuilder().match(Integer.class, this::send).build();
+		return receiveBuilder().match(Integer.class, this::send).match(CalculationResult.class, this::print).build();
 	}
 
-	void send(Integer value) {
+	private Class<? extends AbstractActor> actor(Integer i) {
+		return i % 8 == 0 ? FaultyActor.class : CalculatorActor.class;
+	}
+
+	private void print(CalculationResult result) {
+		logger.info("{} - factorial {} is {}", this.getSelf().path().name(), result.getNumber(), result.getFactorial());
+	}
+
+	private void send(Integer value) {
 		ActorRef calc = this.context().children().toList().apply(next);
 		calc.tell(value, this.getSelf());
 

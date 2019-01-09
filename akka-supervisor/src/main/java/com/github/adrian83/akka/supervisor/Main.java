@@ -9,16 +9,16 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException {
 
 		ActorSystem actorSystem = ActorSystem.create("supervisor-test-system");
-		
+
 		Props mainActorProps = Props.create(MainActor.class);
 		ActorRef mainActorRef = actorSystem.actorOf(mainActorProps);
-		
-		for(int i=1; i< 100; i++){
+
+		for (int i = 1; i < 100; i++) {
 			mainActorRef.tell(i, ActorRef.noSender());
 		}
-		
-		Thread.sleep(50000);
-		
+
+		Thread.sleep(10000);
+
 		actorSystem.terminate();
 	}
 

@@ -12,42 +12,49 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-
+		<akka.version>2.5.19</akka.version>
+		<scala.version>2.11</scala.version>
+		<apache.common.lang.version>2.6</apache.common.lang.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 
 	<dependencies>
 
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-actor_2.11</artifactId>
-			<version>2.5.19</version>
+			<artifactId>akka-actor_${scala.version}</artifactId>
+			<version>${akka.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${apache.common.lang.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.scalatest</groupId>
+			<artifactId>scalatest_${scala.version}</artifactId>
+			<version>3.0.5</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.typesafe.akka</groupId>
-			<artifactId>akka-testkit_2.11</artifactId>
-			<version>2.5.19</version>
+			<artifactId>akka-testkit_${scala.version}</artifactId>
+			<version>${akka.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>akka-snapshots</id>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<url>http://repo.akka.io/snapshots/</url>
-		</repository>
-	</repositories>
-
-	<dependencyManagement>
-
-
-
-	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -77,7 +84,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>xx</Main-Class>
+										<Main-Class>com.github.adrian83.akka.supervisor.Main</Main-Class>
 									</manifestEntries>
 								</transformer>
 							</transformers>

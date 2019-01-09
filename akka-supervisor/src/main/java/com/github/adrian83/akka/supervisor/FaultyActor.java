@@ -16,5 +16,5 @@ public class FaultyActor extends CalculatorActor {
 		logger.warning("Exception during calculation for input: {}", msg);
 		throw new CalculationException();
 	}
-	
+
 }
