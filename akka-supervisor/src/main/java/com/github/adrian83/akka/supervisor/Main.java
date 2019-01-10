@@ -13,11 +13,11 @@ public class Main {
 		Props mainActorProps = Props.create(MainActor.class);
 		ActorRef mainActorRef = actorSystem.actorOf(mainActorProps);
 
-		for (int i = 1; i < 100; i++) {
+		for (int i = 1; i < 150; i++) {
 			mainActorRef.tell(i, ActorRef.noSender());
 		}
 
-		Thread.sleep(10000);
+		Thread.sleep(20000);
 
 		actorSystem.terminate();
 	}

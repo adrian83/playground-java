@@ -9,12 +9,18 @@ public class FaultyActor extends CalculatorActor {
 
 	@Override
 	public Receive createReceive() {
-		return receiveBuilder().matchAny(this::handle).build();
+		return receiveBuilder().match(Integer.class, this::handle).build();
 	}
 
-	public void handle(Object msg) {
+	@Override
+	public void preStart() throws Exception {
+		logger.info("Starting FaultyActor");
+		super.preStart();
+	}
+
+	public void handle(Integer msg) {
 		logger.warning("Exception during calculation for input: {}", msg);
-		throw new CalculationException();
+		throw new CalculationException(msg);
 	}
 
 }
