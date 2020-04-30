@@ -5,46 +5,44 @@ import java.time.Duration;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.scalatest.junit.JUnitSuite;
-
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
 
-public class FaultyActorTest extends JUnitSuite {
+public class FaultyActorTest {
 
-	private static final long serialVersionUID = 5398259879494961351L;
+  static ActorSystem system;
 
-	static ActorSystem system;
+  @BeforeClass
+  public static void setup() {
+    system = ActorSystem.create();
+  }
 
-	@BeforeClass
-	public static void setup() {
-		system = ActorSystem.create();
-	}
+  @AfterClass
+  public static void teardown() {
+    TestKit.shutdownActorSystem(system);
+    system = null;
+  }
 
-	@AfterClass
-	public static void teardown() {
-		TestKit.shutdownActorSystem(system);
-		system = null;
-	}
+  @Test
+  public void testNoMessagesSentFromFaultyActor() {
 
-	@Test
-	public void testNoMessagesSentFromFaultyActor() {
+    new TestKit(system) {
+      {
+        final Props props = Props.create(FaultyActor.class);
+        final ActorRef subject = system.actorOf(props);
 
-		new TestKit(system) {
-			{
-				final Props props = Props.create(FaultyActor.class);
-				final ActorRef subject = system.actorOf(props);
+        within(
+            Duration.ofSeconds(1),
+            () -> {
+              subject.tell("whatever", getRef());
 
-				within(Duration.ofSeconds(1), () -> {
-					subject.tell("whatever", getRef());
+              expectNoMessage();
 
-					expectNoMessage();
-
-					return null;
-				});
-			}
-		};
-	}
+              return null;
+            });
+      }
+    };
+  }
 }
