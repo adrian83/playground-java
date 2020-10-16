@@ -16,7 +16,7 @@
 		<akka.version>2.6.4</akka.version>
 		<scala.version>2.13</scala.version>
 		<apache.common.lang.version>2.6</apache.common.lang.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<scalatest.version>3.1.1</scalatest.version>
 	</properties>
 
