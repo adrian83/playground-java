@@ -1,6 +1,6 @@
 package com.github.adrian83.gol;
 
-import static com.github.adrian83.gol.Cell.*;
+import static com.github.adrian83.gol.CellState.*;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -17,20 +17,20 @@ public class Universe {
 
   private static final Random RANDOM = new Random(System.currentTimeMillis());
 
-  private Cell[][] board;
+  private CellState[][] board;
 
-  private Universe(Cell[][] board) {
+  private Universe(CellState[][] board) {
     this.board = board;
   }
 
   public Universe(int size) {
-    this.board = new Cell[size][size];
+    this.board = new CellState[size][size];
 
     IntStream.range(0, size)
         .forEach((x) -> IntStream.range(0, size).forEach((y) -> board[x][y] = initCell(x, y)));
   }
 
-  private Cell initCell(int x, int y) {
+  private CellState initCell(int x, int y) {
     var r = RANDOM.nextInt(HUNDRED_PERCENT);
     if (r < INITIAL_ALIVE_PERCENT) {
       return ALIVE;
@@ -42,7 +42,7 @@ public class Universe {
   }
 
   public Universe nextGeneration() {
-    var newBoard = new Cell[board.length][board[0].length];
+    var newBoard = new CellState[board.length][board[0].length];
 
     IntStream.range(0, board.length)
         .forEach(
@@ -69,7 +69,7 @@ public class Universe {
         .count();
   }
 
-  private Cell determineNewCell(Cell old, int x, int y) {
+  private CellState determineNewCell(CellState old, int x, int y) {
     switch (old) {
       case EMPTY:
         return old;
@@ -83,7 +83,7 @@ public class Universe {
     return old;
   }
 
-  private Optional<Cell> getCell(int x, int y) {
+  private Optional<CellState> getCell(int x, int y) {
     return onBoard(x, y) ? Optional.of(board[x][y]) : Optional.empty();
   }
 
@@ -97,7 +97,7 @@ public class Universe {
     System.out.println("");
   }
 
-  private String lineToString(Cell[] line) {
+  private String lineToString(CellState[] line) {
     return Arrays.stream(line).map((cell) -> cell.representation()).collect(Collectors.joining());
   }
 }
